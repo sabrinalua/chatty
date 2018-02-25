@@ -3,6 +3,10 @@ var router = express.Router();
 var ZoneController = require('../controllers/ZoneController')
 var Response = require('../models/Response');
 /* GET home page. */
+
+
+router.get('/', ZoneController.index);
+
 router.get('/:resource', function(req, res, next) {
 	var resource = req.params.resource
 

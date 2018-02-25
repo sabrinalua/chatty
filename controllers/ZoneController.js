@@ -1,6 +1,11 @@
 var Zone = require('../models/Zone')
 
 module.exports = {
+	index : function(req, res){
+		console.log("indexer");
+		res.send([1,2,3])
+	},
+
 	find: function(params, callback){
 		Zone.find(params, function(err,zones){
 			if(err){
@@ -29,7 +34,7 @@ module.exports = {
 			callback(null,zone)
 		})
 	},
-	
+
 	update: function(){},
 	delete: function(){},
 }
