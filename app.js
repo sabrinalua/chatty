@@ -25,6 +25,8 @@ mongoose.connect(dburl, function(err,res){
 var index = require('./routes/index');
 var api = require('./routes/api');
 
+var users = require('./routes/users');
+
 var app = express();
 
 // view engine setup
@@ -41,6 +43,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/api', api);
+app.use('/user', users);
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // app.use('/api-docs/:name', swaggerUi.serve, function(req,res){

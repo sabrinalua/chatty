@@ -8,6 +8,8 @@ tags:
     description: Zones APIs
   - name: Comment
     description: Comments APIs
+  - name: Urls
+    description: URL Shortener APIs
 paths:
   /zone:
     get:
@@ -47,5 +49,15 @@ paths:
           description: OK
         '404':
           description: Not Found
+    put:
+      tags:
+        - Zone
+      description: update zone by ID
+      parameters:
+        - in: path
+          name: id
+          description: ID of zone
+          required: true
+          type: string      
 
 basePath: /api

@@ -45,7 +45,7 @@ module.exports = {
 	},
 
 	update: function(id, params,callback){
-		
+
 	},
 	delete: function(){},
 }

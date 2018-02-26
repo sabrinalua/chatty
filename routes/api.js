@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var ZoneController = require('../controllers/ZoneController')
 var Response = require('../models/Response');
+var controllers = require('../controllers')
 
 
 /*format
@@ -15,7 +15,7 @@ router.route(ROUTE).VERB(FUNCTION)
 	endpoint: api/
 	verb: ALL
 */
-router.route('/').all(ZoneController.index)
+router.route('/').all(controllers.index)
 
 /*
 	endpoint: api/:resource
@@ -24,29 +24,28 @@ router.route('/').all(ZoneController.index)
 router.route('/:resource')
 		.get(function(req,res,next){
 			var resource= req.params.resource
-			if(resource=='zone'){
-				ZoneController.find(req.query, function(err,result){
-					if(err){
-						res.status(404).send(new Response('fail', null, 1, "Not Found"))
-						return
-					}
-					res.send(new Response('success', result))
-				})
-			}
+			var controller = controllers[resource]
+
+			controller.find(req.query, function(err,result){
+				if(err){
+					res.status(404).send(new Response('fail', null, 1, "Not Found"))
+					return
+				}
+				res.send(new Response('success', result))
+			})
+			
 		})
 		.post(function(req,res,next){
-			var resource = req.params.resource
-			console.log("post resource")
-			if(resource=='zone'){
-				ZoneController.create(req.body, function(err,result){
-					if(err){
-						res.status(404).send(new Response('fail', null, 1, err))
-						return
-					}
+			var resource= req.params.resource
+			var controller = controllers[resource]
+			controller.create(req.body, function(err,result){
+				if(err){
+					res.status(404).send(new Response('fail', null, 1, err))
+					return
+				}
 
-					res.send(new Response('success', result));
-				})
-			}
+				res.send(new Response('success', result));
+			})
 		})
 
 /*
@@ -55,15 +54,16 @@ router.route('/:resource')
 */
 router.route('/:resource/:id')
 		.get(function(req,res,next){
-			if(req.params.resource=='zone'){
-				ZoneController.findById(req.params.id, function(err,result){
-					if(err){
-						res.status(404).send(new Response('fail', null, 1, 'Not Found'))
-						return
-					}
-					res.send(new Response('success', result))
-				})
-			}
+			var resource= req.params.resource
+			var controller = controllers[resource]
+			controller.findById(req.params.id, function(err,result){
+				if(err){
+					res.status(404).send(new Response('fail', null, 1, 'Not Found'))
+					return
+				}
+				res.send(new Response('success', result))
+			})
+			
 		})
 		// .put()
 
