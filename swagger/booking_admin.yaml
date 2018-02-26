@@ -1,0 +1,260 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: Booking (Admin API)
+  description: 'API for booking admin, to manage Resource Types, Resoures'
+tags:
+  - name: Resource Type
+    description: Resource Type APIs
+  - name: Resource
+    description: Resource APIs
+  - name: Common
+    description: Common APIs between Resource and Resource Type
+paths:
+  /resourceType:
+    get:
+      tags:
+        - Resource Type
+      description: get list of resource types
+      parameters:
+        - in: header
+          name: X_LOGINID
+          description: Login ID for authentication purpose
+          required: true
+          type: string
+          format: string
+        - in: query
+          description: >-
+            The number of items to skip before starting to collect the result
+            set
+          name: start
+          type: integer
+          default: 0
+        - in: query
+          name: limit
+          description: The numbers of items to return
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResourceTypeList'
+    post:
+      tags:
+        - Resource Type
+      description: create new resource Type
+      consumes:
+        - multipart/form-data
+      parameters:
+        - in: formData
+          name: resource_type_name
+          type: string
+          description: Resource Type Name
+        - in: formData
+          name: icon_id
+          type: string
+          description: id of icon
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResourceType'
+  /resource:
+    get:
+      tags:
+        - Resource
+      description: get list of resource
+      parameters:
+        - in: query
+          name: start
+          description: The number of items to skip before starting to collect the result
+          type: integer
+          default: 0
+        - in: query
+          name: limit
+          description: The numbers of items to return
+          type: integer
+          default: 10
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResourceList'
+    post:
+      consumes:
+        - multipart/form-data
+      tags:
+        - Resource
+      description: create resource
+      parameters:
+        - in: formData
+          name: resource_name
+          type: string
+          description: name or resource
+        - in: formData
+          name: resource_type_id
+          type: string
+          description: ID of resource type
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResource'
+  '/resource/{id}':
+    get:
+      tags:
+        - Resource
+      description: get resource by ID
+      parameters:
+        - in: path
+          name: id
+          description: ID of resource
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Resource'
+    put:
+      tags:
+        - Resource
+      description: update resource by id
+      parameters:
+        - in: body
+          name: body
+          description: body
+          schema:
+            $ref: '#/definitions/Resource'
+        - in: path
+          description: ID of resource
+          name: id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResource'
+  '/resourceType/{id}':
+    get:
+      tags:
+        - Resource Type
+      description: GET resource Type by ID
+      parameters:
+        - in: path
+          name: id
+          description: ID of resource type
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResourceType'
+    put:
+      tags:
+        - Resource Type
+      description: update list of resource Type by ID
+      consumes: 
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: body
+          schema:
+            $ref: '#/definitions/ResourceType'
+        - in: path
+          name: id
+          description: ID of resource type
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/DataResourceType'
+  '/deleteResource/{target_id}':
+    put:
+      description: 'delete resource, booking or resource type based on target id and module'
+      tags:
+        - Common
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: target_id
+          required: true
+          type: integer
+          description: ID of target to delete
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/Module'
+      responses:
+        '200':
+          description: Successfully deleted
+          schema:
+            $ref: '#/definitions/SuccessData'
+definitions:
+  ResourceType:
+    properties:
+      resource_type_id:
+        type: string
+        example: '1'
+      resource_type_name:
+        type: string
+        example: Meeting Room
+      icon_id:
+        type: string
+        example: '2'
+  DataResourceTypeList:
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/ResourceType'
+  DataResourceType:
+    properties:
+      data:
+        $ref: '#/definitions/ResourceType'
+  Resource:
+    properties:
+      resource_id:
+        type: string
+        example: '2'
+        description: id of resource
+      resource_name:
+        type: string
+        example: Meeting Room 101
+        description: name of resource
+  DataResourceList:
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Resource'
+  DataResource:
+    properties:
+      data:
+        $ref: '#/definitions/Resource'
+  Module:
+    properties:
+      module:
+        type: string
+        example: resource
+        description: 'module type, value = resource, resource_type, booking'
+  SuccessData:
+    properties:
+      data:
+        $ref: '#/definitions/Success'
+  Success:
+    properties:
+      msg:
+        type: string
+        example: Success
+schemes:
+  - https
+host: devb2be.bondwith.me
+basePath: /co8_2.0/index.php/api

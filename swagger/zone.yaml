@@ -1,0 +1,51 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: Chatty API
+  description: 'API for Chatty'
+tags:
+  - name: Zone
+    description: Zones APIs
+  - name: Comment
+    description: Comments APIs
+paths:
+  /zone:
+    get:
+      tags:
+        - Zone
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Zone
+      parameters:
+        - in: formData
+          name: name
+          type: string
+          description: Name of zone
+        - in: formData
+          name: zip
+          type: string
+          description: zipcodes list, separated by comma(,)
+      responses:
+        '200':
+          description: OK
+  '/zone/{id}': 
+    get:
+      tags: 
+      - Zone
+      description: get zone by ID
+      parameters:
+        - in: path
+          name: id
+          description: ID of zone
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+
+basePath: /api
